@@ -44,6 +44,13 @@ pids/
 *.seed
 *.pid.lock
 
+# Project runtime data (do not version control)
+data/
+data/**
+data/logs/**
+data/projects/**
+data/sessions/**
+
 # Rust build artifacts
 /src-tauri/target/
 Cargo.lock
@@ -60,6 +67,13 @@ config.toml
 # Temporary files
 *.tmp
 *.temp
+
+# Python caches and compiled files
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
 
 # Database files
 *.db
