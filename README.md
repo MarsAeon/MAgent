@@ -183,4 +183,58 @@ $env:IDEAARCHITECT_MODE="python_only"; python main.py
 
 MIT（见 `LICENSE`）。
 
-—— 若你需要英文版 README 或徽章/截图、功能清单等加值信息，请告诉我，我可以在本仓库直接补充。
+## API 概览（Eel 暴露接口）
+
+后端通过 Eel 暴露一组简化 API，供前端 `src/utils/eel-api.ts` 调用：
+
+- 项目 Project
+	- `api_create_project(project_data)`
+	- `api_load_project(project_id)`
+	- `api_save_project(project_data)`
+	- `api_list_projects()`
+	- `api_delete_project(project_id)`
+- 工作流 Workflow
+	- `api_start_workflow(project_id, initial_idea, workflow_mode)`
+	- `api_get_workflow_status(session_id)`
+	- `api_pause_workflow(session_id)`
+	- `api_resume_workflow(session_id)`
+	- `api_stop_workflow(session_id)`
+- 智能体 Agent（示例实现）
+	- `api_list_agents()`
+	- `api_create_agent(name, role, model, description)`
+	- `api_get_agent_status(agent_id)`
+	- `api_configure_agent(agent_id, config)`
+
+如需新增接口：在 `src/api/` 添加函数，并在 `main.py` 使用 `@eel.expose` 暴露，然后前端通过 `eel-api.ts` 调用。
+
+## 开发说明（前后端衔接）
+
+前端已通过 `eel-api.ts` 适配到 Python/Eel：
+
+1. 将原 `@tauri-apps/api/core` 的 `invoke` 调用替换为 `eel-api.ts` 中的 `invoke`。
+2. 使用事件总线推送工作流进度（参见 `src/utils/event_bus.py` 与前端事件监听）。
+3. UI 组件与路由（React + Vite）保持不变，仅替换数据源。
+
+## 故障排除（FAQ）
+
+1) Eel 脚本加载失败或端口占用
+- 确认 Python 后端已启动；默认端口 8000，可通过环境变量调整：`$env:EEL_PORT=8010`
+
+2) 前端依赖或构建失败
+- 重新安装依赖：`npm install`
+- 确认 Node 版本 ≥ 18：`node -v`
+- 使用 `npx tsc --noEmit` 定位类型错误
+
+3) Python 依赖缺失
+- 执行 `python -m pip install -r requirements.txt`
+- 确认 Python 版本为 3.11+
+
+## 日志与数据位置
+
+- 日志：`data/logs/ideaarchitect.log`
+- 项目：`data/projects/`
+- 会话：`data/sessions/`
+
+首次运行会自动创建上述目录；这些目录均已在 `.gitignore` 中忽略。
+
+—— 若你需要英文版 README、徽章/截图或更细的功能清单，请告诉我，我可以直接补充。
