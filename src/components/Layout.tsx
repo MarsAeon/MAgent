@@ -25,7 +25,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* 主内容 */}
         <main className="flex-1 overflow-y-auto p-6">
-          {children || <Outlet />}
+          {children ? children : <Outlet />}
         </main>
       </div>
     </div>

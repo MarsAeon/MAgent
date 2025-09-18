@@ -7,9 +7,10 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* 生产环境下默认使用浅色主题，避免全局白字导致输入框看不见 */
+  color-scheme: light;
+  color: #213547;            /* 全局文本为深色，可在组件内用 Tailwind 覆盖 */
+  background-color: #ffffff; /* 全局背景为白色 */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -20,8 +21,6 @@
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
@@ -29,7 +28,7 @@ body {
 #root {
   width: 100%;
   margin: 0 auto;
-  text-align: center;
+  text-align: initial; /* 由组件控制文本对齐，避免全局居中影响布局 */
 }
 
 /* 自定义类 */

@@ -1,0 +1,91 @@
+{
+  "id": "clar_20250918_094232_636259",
+  "status": "running",
+  "idea_seed": {
+    "raw_text": "我想做一个ai英语学习助手",
+    "context_hints": []
+  },
+  "project_id": null,
+  "questions": [
+    {
+      "slot_name": "target_user",
+      "question": "这个AI英语学习助手的主要目标用户是谁？",
+      "priority": 9,
+      "type": "categorical",
+      "answer": null
+    },
+    {
+      "slot_name": "focus_skills",
+      "question": "你希望这个助手侧重于哪些英语技能（如听力、口语、阅读、写作）？",
+      "priority": 10,
+      "type": "multiple_choice",
+      "answer": null
+    },
+    {
+      "slot_name": "real_time_conversation",
+      "question": "是否需要支持实时对话练习功能？",
+      "priority": 8,
+      "type": "boolean",
+      "answer": null
+    },
+    {
+      "slot_name": "progress_tracking",
+      "question": "用户的学习进度是否需要被记录和追踪？",
+      "priority": 7,
+      "type": "boolean",
+      "answer": null
+    },
+    {
+      "slot_name": "speech_recognition",
+      "question": "是否需要集成语音识别和发音评估功能？",
+      "priority": 9,
+      "type": "boolean",
+      "answer": null
+    },
+    {
+      "slot_name": "delivery_platform",
+      "question": "你希望这个助手以什么形式提供服务（如App、微信小程序、网页、智能硬件）？",
+      "priority": 8,
+      "type": "categorical",
+      "answer": null
+    },
+    {
+      "slot_name": "content_source",
+      "question": "是否有特定的课程内容来源或需要自定义开发？",
+      "priority": 7,
+      "type": "boolean",
+      "answer": null
+    },
+    {
+      "slot_name": "difficulty_levels",
+      "question": "是否需要支持多级别难度（如CEFR A1-C2）？",
+      "priority": 8,
+      "type": "boolean",
+      "answer": null
+    },
+    {
+      "slot_name": "personalized_learning",
+      "question": "是否计划加入AI个性化推荐学习路径功能？",
+      "priority": 9,
+      "type": "boolean",
+      "answer": null
+    },
+    {
+      "slot_name": "technical_constraints",
+      "question": "是否有预算或技术栈方面的限制？",
+      "priority": 6,
+      "type": "open_ended",
+      "answer": null
+    }
+  ],
+  "created_at": "2025-09-18T09:42:32.636310",
+  "updated_at": "2025-09-18T09:42:49.256685",
+  "messages": [
+    {
+      "role": "bot",
+      "slot_name": "focus_skills",
+      "content": "你希望这个助手侧重于哪些英语技能（如听力、口语、阅读、写作）？",
+      "timestamp": "2025-09-18T09:42:49.256675"
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "id": "clar_20250917_232409_851233",
+  "status": "running",
+  "idea_seed": {
+    "raw_text": "我想做一个英语学习助手\n",
+    "context_hints": []
+  },
+  "project_id": null,
+  "questions": [
+    {
+      "slot_name": "target_user",
+      "question": "这个英语学习助手的目标用户是谁？例如：学生、职场人士、儿童等。",
+      "priority": 9,
+      "type": "categorical",
+      "answer": null
+    },
+    {
+      "slot_name": "skills_focus",
+      "question": "你希望这个助手主要帮助用户提升哪些英语技能？例如：听力、口语、阅读、写作、语法等。",
+      "priority": 10,
+      "type": "multiple_choice",
+      "answer": null
+    },
+    {
+      "slot_name": "speech_recognition",
+      "question": "是否需要支持语音识别和发音纠正功能？",
+      "priority": 8,
+      "type": "boolean",
+      "answer": null
+    },
+    {
+      "slot_name": "platform",
+      "question": "你希望这个助手以什么形式呈现？例如：手机App、微信小程序、网页、智能硬件等。",
+      "priority": 8,
+      "type": "categorical",
+      "answer": null
+    },
+    {
+      "slot_name": "personalized_learning",
+      "question": "是否需要个性化学习计划或AI自适应学习路径？",
+      "priority": 9,
+      "type": "boolean",
+      "answer": null
+    },
+    {
+      "slot_name": "exam_preparation",
+      "question": "是否需要与现有英语考试标准对接？例如：雅思、托福、四六级等。",
+      "priority": 7,
+      "type": "multiple_choice",
+      "answer": null
+    },
+    {
+      "slot_name": "resource_constraint",
+      "question": "是否有预算或技术资源限制？例如：是否需要开源方案或低成本部署？",
+      "priority": 6,
+      "type": "open_ended",
+      "answer": null
+    },
+    {
+      "slot_name": "offline_support",
+      "question": "是否需要离线使用功能？",
+      "priority": 6,
+      "type": "boolean",
+      "answer": null
+    }
+  ],
+  "created_at": "2025-09-17T23:24:09.851271",
+  "updated_at": "2025-09-17T23:24:22.319144",
+  "messages": []
+}

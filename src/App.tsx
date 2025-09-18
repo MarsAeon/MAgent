@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
 import IdeaInputPage from './pages/IdeaInputPage';
@@ -13,8 +13,8 @@ function App() {
   return (
     <Router>
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-        <Layout>
-          <Routes>
+        <Routes>
+          <Route element={<Layout />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/idea-input" element={<IdeaInputPage />} />
             <Route path="/workspace" element={<WorkspacePage />} />
@@ -22,8 +22,8 @@ function App() {
             <Route path="/discussion" element={<DiscussionPage />} />
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/settings" element={<SettingsPage />} />
-          </Routes>
-        </Layout>
+          </Route>
+        </Routes>
       </div>
     </Router>
   );

@@ -1,0 +1,14 @@
+{
+  // md-to-pdf config
+  "stylesheet": [
+    "./pdf-style.css"
+  ],
+  "pdf_options": {
+    "format": "A4",
+    "margin": "20mm",
+    "printBackground": true,
+    "displayHeaderFooter": true,
+    "footerTemplate": "<div style=\"font-size:10px;width:100%;text-align:center;color:#666;padding:6px 12px;\">MAgent · 评审稿 · <span class=\"pageNumber\"></span>/<span class=\"totalPages\"></span></div>",
+    "headerTemplate": "<div></div>"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "id": "c20660c4-ef82-4de2-8577-0cad2041c456",
+  "name": "生产集成测试项目",
+  "description": "用于Eel集成测试",
+  "status": "draft",
+  "created_at": "2025-09-17T15:22:03.667908",
+  "updated_at": "2025-09-17T15:22:03.667930",
+  "input": {
+    "original_idea": "一个AI学习平台",
+    "documents": [],
+    "requirements": [],
+    "constraints": [],
+    "metadata": {}
+  },
+  "output": {
+    "final_solution": null,
+    "implementation_plan": null,
+    "risk_analysis": null,
+    "resource_requirements": null,
+    "timeline": null,
+    "alternatives": [],
+    "recommendations": [],
+    "metadata": {}
+  },
+  "current_session_id": null,
+  "session_history": [],
+  "workflow_mode": "balanced",
+  "agent_configs": [],
+  "tags": [],
+  "metadata": {}
+}

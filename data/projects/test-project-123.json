@@ -1,0 +1,31 @@
+{
+  "id": "test-project-123",
+  "name": "测试项目",
+  "description": "这是一个测试项目",
+  "status": "draft",
+  "created_at": "2025-09-17T13:34:12.046677",
+  "updated_at": "2025-09-17T13:34:12.046679",
+  "input": {
+    "original_idea": "这是一个测试想法",
+    "documents": [],
+    "requirements": [],
+    "constraints": [],
+    "metadata": {}
+  },
+  "output": {
+    "final_solution": null,
+    "implementation_plan": null,
+    "risk_analysis": null,
+    "resource_requirements": null,
+    "timeline": null,
+    "alternatives": [],
+    "recommendations": [],
+    "metadata": {}
+  },
+  "current_session_id": null,
+  "session_history": [],
+  "workflow_mode": "balanced",
+  "agent_configs": [],
+  "tags": [],
+  "metadata": {}
+}

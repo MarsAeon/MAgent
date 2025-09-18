@@ -1,0 +1,31 @@
+{
+  "id": "0d273b03-6cac-4230-8b4a-b9bf15b15043",
+  "name": "测试项目",
+  "description": "这是一个测试项目",
+  "status": "draft",
+  "created_at": "2025-09-17T14:05:05.931406",
+  "updated_at": "2025-09-17T14:05:05.931413",
+  "input": {
+    "original_idea": "",
+    "documents": [],
+    "requirements": [],
+    "constraints": [],
+    "metadata": {}
+  },
+  "output": {
+    "final_solution": null,
+    "implementation_plan": null,
+    "risk_analysis": null,
+    "resource_requirements": null,
+    "timeline": null,
+    "alternatives": [],
+    "recommendations": [],
+    "metadata": {}
+  },
+  "current_session_id": null,
+  "session_history": [],
+  "workflow_mode": "balanced",
+  "agent_configs": [],
+  "tags": [],
+  "metadata": {}
+}

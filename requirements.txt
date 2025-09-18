@@ -1,0 +1,22 @@
+# IdeaArchitect Python 生产依赖（最小集）
+
+# 核心框架（桌面端JS桥接）
+eel>=0.16.0
+
+# 数据模型与校验
+pydantic>=2.0.0
+
+# 配置管理
+python-dotenv>=1.0.0
+
+# 网络请求（模型调用/集成时使用，可保留）
+requests>=2.31.0
+
+# 可选：AI模型集成（需要时取消注释）
+# openai>=1.0.0
+# anthropic>=0.7.0
+
+# 说明：
+# - 已移除开发/测试相关依赖（pytest、pytest-asyncio）
+# - 已移除未使用依赖（loguru、httpx）
+# - logger 使用内置 logging（见 src/utils/logger.py）

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { invoke } from '@tauri-apps/api/core';
-import { 
-  Lightbulb, 
-  FileText, 
-  Link as LinkIcon, 
+// import { invoke } from '../utils/eel-api';
+import {
+  Lightbulb,
+  FileText,
+  Link as LinkIcon,
   Upload,
   Send,
   Sparkles,
@@ -90,6 +90,11 @@ const IdeaInputPage: React.FC = () => {
     setError('');
 
     try {
+      // 运行时自检：Eel 是否可用
+      if (typeof window === 'undefined' || !(window as any).eel) {
+        throw new Error('Eel 未加载或不可用，请确认已通过 start_production.py 启动并成功加载 /eel.js');
+      }
+
       let finalText = ideaText;
 
       // 根据输入类型处理内容
@@ -108,15 +113,16 @@ const IdeaInputPage: React.FC = () => {
         domain: domain.trim() || undefined
       };
 
-      // 调用后端开始优化
-      const sessionId = await invoke<string>('start_concept_optimization', { seed });
-      
-      // 导航到工作区页面
-      navigate(`/workspace?session=${sessionId}`);
-      
-    } catch (err) {
+      console.log('[IdeaInput] start_concept_optimization seed:', seed);
+      // 将想法存储到 sessionStorage，供智能问答页使用
+      sessionStorage.setItem('currentIdeaSeed', JSON.stringify(seed));
+
+      // 先进入智能问答澄清页；澄清完成后再进入工作区
+      navigate('/questioning');
+
+    } catch (err: any) {
       console.error('Failed to start optimization:', err);
-      setError('启动优化失败，请检查输入内容并重试');
+      setError(`启动优化失败：${err?.message || err}`);
     } finally {
       setLoading(false);
     }

@@ -1,0 +1,87 @@
+{
+  "id": "clar_20250917_232811_070961",
+  "status": "running",
+  "idea_seed": {
+    "raw_text": "ai辅助大学生学习英语",
+    "context_hints": [
+      "面向四六级"
+    ],
+    "domain": "教育"
+  },
+  "project_id": null,
+  "questions": [
+    {
+      "slot_name": "target_level",
+      "question": "目标用户是哪些年级或英语水平的大学生？",
+      "priority": 9,
+      "type": "multiple_choice",
+      "answer": "大一到大四准备英语四六级"
+    },
+    {
+      "slot_name": "learning_areas",
+      "question": "AI主要辅助英语学习的哪个方面（如听力、口语、阅读、写作、词汇等）？",
+      "priority": 10,
+      "type": "checkbox",
+      "answer": "词汇"
+    },
+    {
+      "slot_name": "curriculum_sync",
+      "question": "是否需要与现有课程或教材同步？",
+      "priority": 8,
+      "type": "boolean",
+      "answer": null
+    },
+    {
+      "slot_name": "device_preference",
+      "question": "用户希望通过什么设备使用该AI工具（手机、电脑、平板等）？",
+      "priority": 7,
+      "type": "multiple_choice",
+      "answer": null
+    },
+    {
+      "slot_name": "personalized_learning",
+      "question": "是否需要个性化学习路径推荐功能？",
+      "priority": 9,
+      "type": "boolean",
+      "answer": "需要"
+    },
+    {
+      "slot_name": "speech_recognition",
+      "question": "是否包含实时语音识别和发音纠正功能？",
+      "priority": 8,
+      "type": "boolean",
+      "answer": null
+    },
+    {
+      "slot_name": "teacher_support",
+      "question": "是否有在线教师或助教协同支持的需求？",
+      "priority": 6,
+      "type": "boolean",
+      "answer": null
+    },
+    {
+      "slot_name": "feedback_type",
+      "question": "期望的学习反馈形式是什么（如进度报告、错题分析、能力评估等）？",
+      "priority": 8,
+      "type": "checkbox",
+      "answer": null
+    },
+    {
+      "slot_name": "offline_mode",
+      "question": "是否需要支持离线使用模式？",
+      "priority": 6,
+      "type": "boolean",
+      "answer": null
+    },
+    {
+      "slot_name": "budget",
+      "question": "预算范围或付费意愿如何？",
+      "priority": 7,
+      "type": "text",
+      "answer": null
+    }
+  ],
+  "created_at": "2025-09-17T23:28:11.071202",
+  "updated_at": "2025-09-17T23:29:04.077658",
+  "messages": []
+}

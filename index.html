@@ -1,16 +1,34 @@
 <!doctype html>
 <html lang="zh-CN">
   <head>
+    <!-- 简易错误提示（仅用于定位白屏，正常运行时不显示） -->
+    <script>
+      (function () {
+        function showErr(msg) {
+          var el = document.getElementById('boot-error');
+          if (!el) return;
+          el.style.display = 'block';
+          el.textContent = msg;
+        }
+        window.addEventListener('error', function (e) {
+          showErr('JS Error: ' + (e && e.message ? e.message : 'unknown'));
+        });
+        window.addEventListener('unhandledrejection', function (e) {
+          var reason = e && e.reason ? (e.reason.message || String(e.reason)) : 'unknown';
+          showErr('Promise Rejection: ' + reason);
+        });
+      })();
+    </script>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MAGent - 概念优化引擎</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  </head>
-  <body class="antialiased">
-    <div id="root"></div>
+    <title>IdeaArchitect - 多智能体概念优化引擎</title>
+    <!-- 先加载 Eel 脚本，确保 window.eel 在应用初始化前可用 -->
+    <script src="/eel.js"></script>
+    <!-- Vite 入口脚本（开发模式）会被 Vite 处理；生产构建会注入 assets 脚本 -->
     <script type="module" src="/src/main.tsx"></script>
+  </head>
+  <body>
+    <div id="boot-error" style="display:none;position:fixed;left:0;right:0;top:0;background:#fee;color:#900;padding:8px;z-index:99999;font-family:monospace;white-space:pre-wrap;"></div>
+    <div id="root"><div style="padding:12px;color:#6b7280;font-family:system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;">正在加载应用…</div></div>
   </body>
 </html>

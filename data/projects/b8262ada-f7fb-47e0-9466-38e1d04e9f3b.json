@@ -1,0 +1,31 @@
+{
+  "id": "b8262ada-f7fb-47e0-9466-38e1d04e9f3b",
+  "name": "API测试项目",
+  "description": "通过API创建的测试项目",
+  "status": "draft",
+  "created_at": "2025-09-17T13:27:48.688770",
+  "updated_at": "2025-09-17T13:27:48.688772",
+  "input": {
+    "original_idea": "",
+    "documents": [],
+    "requirements": [],
+    "constraints": [],
+    "metadata": {}
+  },
+  "output": {
+    "final_solution": null,
+    "implementation_plan": null,
+    "risk_analysis": null,
+    "resource_requirements": null,
+    "timeline": null,
+    "alternatives": [],
+    "recommendations": [],
+    "metadata": {}
+  },
+  "current_session_id": null,
+  "session_history": [],
+  "workflow_mode": "balanced",
+  "agent_configs": [],
+  "tags": [],
+  "metadata": {}
+}

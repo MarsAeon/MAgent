@@ -1,0 +1,94 @@
+{
+  "id": "clar_20250918_084714_974959",
+  "status": "running",
+  "idea_seed": {
+    "raw_text": "我想做一个ai英语学习助手",
+    "context_hints": [
+      "面向大学生"
+    ],
+    "domain": "产品设计"
+  },
+  "project_id": null,
+  "questions": [
+    {
+      "slot_name": "target_user",
+      "question": "这个AI英语学习助手的主要目标用户是谁？例如：学生、职场人士、儿童等。",
+      "priority": 9,
+      "type": "categorical",
+      "answer": null
+    },
+    {
+      "slot_name": "focus_skills",
+      "question": "你希望这个助手侧重于哪些英语技能？例如：听力、口语、阅读、写作、语法等。",
+      "priority": 10,
+      "type": "multiple_choice",
+      "answer": null
+    },
+    {
+      "slot_name": "speech_recognition",
+      "question": "是否需要支持实时对话练习或语音识别功能？",
+      "priority": 8,
+      "type": "boolean",
+      "answer": null
+    },
+    {
+      "slot_name": "learning_mode",
+      "question": "你期望的学习模式是什么？例如：课程式学习、游戏化学习、个性化推荐等。",
+      "priority": 9,
+      "type": "categorical",
+      "answer": null
+    },
+    {
+      "slot_name": "integration_platforms",
+      "question": "是否需要与外部平台集成？例如：微信小程序、APP、网页端、LMS系统等。",
+      "priority": 7,
+      "type": "multiple_choice",
+      "answer": null
+    },
+    {
+      "slot_name": "adaptive_learning",
+      "question": "是否需要根据用户水平动态调整学习内容难度？",
+      "priority": 8,
+      "type": "boolean",
+      "answer": null
+    },
+    {
+      "slot_name": "ai_technology",
+      "question": "是否有特定的AI技术偏好？例如：使用大模型（如GPT）、自研NLP模型等。",
+      "priority": 7,
+      "type": "categorical",
+      "answer": null
+    },
+    {
+      "slot_name": "offline_support",
+      "question": "是否需要离线使用功能？",
+      "priority": 6,
+      "type": "boolean",
+      "answer": null
+    },
+    {
+      "slot_name": "timeline",
+      "question": "你期望的开发周期和上线时间是怎样的？",
+      "priority": 6,
+      "type": "open_ended",
+      "answer": null
+    },
+    {
+      "slot_name": "resources_constraint",
+      "question": "是否有预算或资源限制？例如：团队规模、算力资源、资金投入等。",
+      "priority": 7,
+      "type": "open_ended",
+      "answer": null
+    }
+  ],
+  "created_at": "2025-09-18T08:47:14.974990",
+  "updated_at": "2025-09-18T08:47:32.177750",
+  "messages": [
+    {
+      "role": "bot",
+      "slot_name": "focus_skills",
+      "content": "你希望这个助手侧重于哪些英语技能？例如：听力、口语、阅读、写作、语法等。",
+      "timestamp": "2025-09-18T08:47:32.177745"
+    }
+  ]
+}

@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { invoke } from '@tauri-apps/api/core';
+import { invoke } from '../utils/eel-api';
 import { 
   MessageSquare, 
   Send, 
   Bot, 
   User,
-  CheckCircle2,
-  Clock,
   Lightbulb,
   Target
 } from 'lucide-react';
@@ -31,14 +29,71 @@ const QuestioningPage: React.FC = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [completedSlots, setCompletedSlots] = useState(new Set<string>());
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [askedSlots, setAskedSlots] = useState(new Set<string>());
+  // 允许用户随时输入与发送（取消首问前禁用）
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+  const [isCompleted, setIsCompleted] = useState(false);
+  // 默认折叠“当前想法摘要”，给对话区域更多空间
+  const [showIdeaCard, setShowIdeaCard] = useState(false);
+
+  // 当消息或加载状态变化时，自动滚动到底部
+  useEffect(() => {
+    try {
+      bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    } catch {}
+  }, [messages, isProcessing]);
+
+  // 规范化问题文本用于去重
+  const normalize = (text: string) => (
+    (text || '')
+      .trim()
+      .toLowerCase()
+      .replace(/[\s\t\n\r]+/g, ' ')
+      .replace(/[，。！？、；：:;\-—…·•\.,!\?\(\)\[\]\{\}<>“”‘’\"'《》【】]+/g, '')
+  );
+
+  // 仅在未问过/未完成且内容不重复时插入问题
+  const pushQuestionIfNew = (slot: string, text: string) => {
+    if (!slot || !text) return false;
+    const norm = normalize(text);
+    let inserted = false;
+    setMessages(prev => {
+      const alreadyAskedThisSlot = askedSlots.has(slot) || completedSlots.has(slot);
+      const alreadyHasSameText = prev.some(m => m.type === 'bot' && !m.isImportant && normalize(m.content) === norm);
+      if (alreadyAskedThisSlot || alreadyHasSameText) {
+        return prev;
+      }
+      const questionMessage: ChatMessage = {
+        id: `question-${slot}-${Date.now()}`,
+        type: 'bot',
+        content: text,
+        timestamp: new Date(),
+        clarificationId: slot,
+      };
+      inserted = true;
+      return [...prev, questionMessage];
+    });
+    if (inserted) {
+      setAskedSlots(prev => new Set([...prev, slot]));
+    }
+    return inserted;
+  };
 
   useEffect(() => {
-    // 从本地存储或 URL 参数获取当前想法
-    loadCurrentIdea();
-    
-    // 开始澄清过程
-    startClarificationProcess();
+    // 优先从 sessionStorage 获取 idea（由 IdeaInputPage 传递）
+    const saved = sessionStorage.getItem('currentIdeaSeed');
+    if (saved) {
+      try { setCurrentIdea(JSON.parse(saved)); } catch {}
+    }
+    // 兜底：加载默认示例
+    if (!saved) loadCurrentIdea();
   }, []);
+
+  useEffect(() => {
+    if (currentIdea) {
+      startClarificationProcess();
+    }
+  }, [currentIdea]);
 
   const loadCurrentIdea = () => {
     // TODO: 从上一页传递的数据或本地存储获取
@@ -56,63 +111,44 @@ const QuestioningPage: React.FC = () => {
     setIsProcessing(true);
     
     try {
-      console.log("Starting AI clarification process...");
-      
-      // 调用实际的AI澄清分析
-      const result = await invoke<{
-        status: string,
-        clarification: {
-          questions: Array<{
-            question: string,
-            type: string,
-            priority: string
-          }>,
-          confidence: number,
-          missing_slots: string[],
-          structured_idea: any
-        }
-      }>('run_clarification_ai', {
-        ideaContent: currentIdea.raw_text
-      });
-      
-      console.log("AI clarification result:", result);
-      
-      if (result.status === 'completed') {
-        // 转换AI返回的问题格式为前端格式
-        const clarifications: Clarification[] = result.clarification.questions.map((q, index) => ({
-          question: q.question,
-          slot_name: `slot_${index}`,
-          importance: q.priority === 'high' ? 9 : 7,
-          suggested_answers: ["是", "否", "需要更多信息"]
-        }));
-        
-        setClarifications(clarifications);
-        
-        // 添加机器人初始消息
-        const initialMessage: ChatMessage = {
-          id: Date.now().toString(),
-          type: 'bot',
-          content: `我已经分析了您的想法，有 ${clarifications.length} 个问题需要澄清。让我们开始吧！`,
-          timestamp: new Date(),
-          isImportant: true
-        };
-        setMessages([initialMessage]);
-        
-        // 发送第一个问题
-        if (clarifications.length > 0) {
-          setTimeout(() => {
-            const firstQuestion: ChatMessage = {
-              id: (Date.now() + 1).toString(),
-              type: 'bot',
-              content: clarifications[0].question,
-              timestamp: new Date(),
-              clarificationId: clarifications[0].slot_name
-            };
-            setMessages(prev => [...prev, firstQuestion]);
-          }, 1000);
-        }
+      console.log("Starting Clarification Session...");
+
+      const res = await invoke<any>('start_clarification_session', { seed: currentIdea });
+      if (!res?.success) throw new Error(res?.error || '无法创建澄清会话');
+
+      setSessionId(res.session_id);
+
+      const qs = res.questions as Array<{ question: string; slot_name: string; priority?: number; type?: string }>;
+      const normalized: Clarification[] = (qs || []).map(q => ({
+        question: q.question,
+        slot_name: q.slot_name,
+        importance: Math.max(1, Math.min(10, (q.priority ?? 7))),
+        suggested_answers: ["好的", "否", "需要更多信息"],
+      }));
+      setClarifications(normalized);
+
+      const welcome: ChatMessage = {
+        id: Date.now().toString(),
+        type: 'bot',
+        content: `我已为您的想法生成了 ${normalized.length} 个澄清问题。让我们开始吧！`,
+        timestamp: new Date(),
+        isImportant: true,
+      };
+      setMessages([welcome]);
+
+      const first = res.next_question as { question: string; slot_name: string } | null;
+      if (first) {
+        setTimeout(() => {
+          const inserted = pushQuestionIfNew(first.slot_name, first.question);
+          if (inserted) {
+            setIsProcessing(false);
+          }
+        }, 600);
       } else {
-        throw new Error('AI澄清分析失败');
+        // 后端未直接返回首问，则回退本地挑选并插入
+        setTimeout(() => {
+          askNextQuestion();
+        }, 600);
       }
     } catch (error) {
       console.error("Clarification process failed:", error);
@@ -163,48 +199,54 @@ const QuestioningPage: React.FC = () => {
         askNextQuestion();
       }, 1000);
     } finally {
-      setIsProcessing(false);
+      // 是否解除 processing 由首问插入时机控制，避免用户过早输入
     }
   };
 
-  const askNextQuestion = () => {
+  const askNextQuestion = async () => {
     const unansweredClarifications = clarifications.filter(c => !completedSlots.has(c.slot_name));
     
     if (unansweredClarifications.length === 0) {
       // 所有问题已回答，结束澄清过程
-      finishClarification();
+      await finishClarification();
       return;
     }
 
     // 按重要性排序，询问下一个问题
     const nextClarification = unansweredClarifications.sort((a, b) => b.importance - a.importance)[0];
     
-    const questionMessage: ChatMessage = {
-      id: `question-${nextClarification.slot_name}`,
-      type: 'bot',
-      content: nextClarification.question,
-      timestamp: new Date(),
-      clarificationId: nextClarification.slot_name
-    };
-    
-    setMessages(prev => [...prev, questionMessage]);
-    
-    // 如果有建议答案，也显示它们
-    if (nextClarification.suggested_answers && nextClarification.suggested_answers.length > 0) {
+    const inserted = pushQuestionIfNew(nextClarification.slot_name, nextClarification.question);
+    if (inserted) {
+      setIsProcessing(false);
+    }
+    // 如果确实插入了新问题且有建议答案，显示它们
+    if (inserted && nextClarification.suggested_answers && nextClarification.suggested_answers.length > 0) {
       setTimeout(() => {
-        const suggestionsMessage: ChatMessage = {
-          id: `suggestions-${nextClarification.slot_name}`,
-          type: 'bot',
-          content: `💡 建议选项：\n${nextClarification.suggested_answers!.map((ans, idx) => `${idx + 1}. ${ans}`).join('\n')}`,
-          timestamp: new Date()
-        };
-        setMessages(prev => [...prev, suggestionsMessage]);
+        setMessages(prev => {
+          // 防止重复插入相同 suggestions
+          const hasSuggestions = prev.some(m => m.id.startsWith(`suggestions-${nextClarification.slot_name}`));
+          if (hasSuggestions) return prev;
+          const suggestionsMessage: ChatMessage = {
+            id: `suggestions-${nextClarification.slot_name}-${Date.now()}`,
+            type: 'bot',
+            content: `💡 建议选项：\n${nextClarification.suggested_answers!.map((ans, idx) => `${idx + 1}. ${ans}`).join('\n')}`,
+            timestamp: new Date()
+          };
+          return [...prev, suggestionsMessage];
+        });
       }, 500);
     }
   };
 
   const handleSendMessage = async () => {
-    if (!currentInput.trim() || isProcessing) return;
+    if (!currentInput.trim() || isCompleted) return;
+
+    console.debug('[Clarify] send clicked:', {
+      input: currentInput,
+      isProcessing,
+      sessionId,
+      messagesCount: messages.length,
+    });
 
     // 添加用户消息
     const userMessage: ChatMessage = {
@@ -219,7 +261,8 @@ const QuestioningPage: React.FC = () => {
     // 找到当前正在回答的问题
     const lastBotMessage = messages.filter(m => m.type === 'bot' && m.clarificationId).pop();
     
-    if (lastBotMessage?.clarificationId) {
+  let backendProvidedNext = false;
+  if (lastBotMessage?.clarificationId) {
       // 更新澄清答案
       setClarifications(prev => prev.map(c => 
         c.slot_name === lastBotMessage.clarificationId
@@ -229,29 +272,46 @@ const QuestioningPage: React.FC = () => {
       
       // 标记槽位已完成
       setCompletedSlots(prev => new Set([...prev, lastBotMessage.clarificationId!]));
+
+      // 推送回答到后端，获取下一题
+      try {
+        if (sessionId) {
+          const submitRes = await invoke<any>('submit_clarification_answer', {
+            session_id: sessionId,
+            slot_name: lastBotMessage.clarificationId,
+            answer: currentInput.trim(),
+          });
+          if (!submitRes?.success) {
+            console.warn('提交答案失败:', submitRes?.error);
+          } else if (submitRes?.next_question) {
+            const next = submitRes.next_question as { question: string; slot_name: string };
+            const inserted = pushQuestionIfNew(next.slot_name, next.question);
+            backendProvidedNext = inserted; // 仅在确实插入了下一题时，阻止本地 fallback
+          } else if (submitRes?.completed === true) {
+            // 所有问题已完成：立即结束澄清并给出结束语
+            await finishClarification();
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn('提交答案异常:', err);
+      }
       
-      // 添加确认消息
-      const confirmMessage: ChatMessage = {
-        id: `confirm-${Date.now()}`,
-        type: 'bot',
-        content: '✅ 收到！让我继续下一个问题...',
-        timestamp: new Date()
-      };
-      
-      setMessages(prev => [...prev, confirmMessage]);
+      // 直接进行下一题，不输出确认消息
     }
     
     setCurrentInput('');
     setIsProcessing(true);
     
-    // 延迟询问下一个问题
-    setTimeout(() => {
+    // 直接询问下一个问题（若后端未返回下一题且未完成）
+    if (!backendProvidedNext && !isCompleted) {
       askNextQuestion();
-      setIsProcessing(false);
-    }, 1500);
+    }
+    setIsProcessing(false);
   };
 
-  const finishClarification = () => {
+  const finishClarification = async () => {
+    setIsCompleted(true);
     const completionMessage: ChatMessage = {
       id: 'completion',
       type: 'bot',
@@ -261,11 +321,29 @@ const QuestioningPage: React.FC = () => {
     };
     
     setMessages(prev => [...prev, completionMessage]);
-    
-    // 延迟跳转到工作区
-    setTimeout(() => {
-      navigate(`/workspace?session=${sessionId}`);
-    }, 2000);
+    try {
+      if (sessionId) {
+        const finishRes = await invoke<any>('finish_clarification', { session_id: sessionId });
+        if (finishRes?.success) {
+          const wfSession = finishRes.workflow_session_id ?? sessionId;
+          setTimeout(() => {
+            // 携带 wf 参数，便于 Workspace 只监听对应的工作流事件
+            navigate(`/workspace?session=${sessionId}&wf=${wfSession}`);
+          }, 1200);
+        } else {
+          // 即便失败，仍跳转工作区但提示
+          console.warn('结束澄清失败:', finishRes?.error);
+          setTimeout(() => {
+            navigate(`/workspace?session=${sessionId}&wf=${sessionId}`);
+          }, 1200);
+        }
+      }
+    } catch (err) {
+      console.warn('finishClarification 调用异常:', err);
+      setTimeout(() => {
+        navigate(`/workspace?session=${sessionId}&wf=${sessionId}`);
+      }, 1200);
+    }
   };
 
   const handleQuickAnswer = (answer: string) => {
@@ -279,13 +357,21 @@ const QuestioningPage: React.FC = () => {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    // 某些浏览器/输入法场景更可靠地触发 onKeyDown
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
   const getProgressPercentage = () => {
     if (clarifications.length === 0) return 0;
     return Math.round((completedSlots.size / clarifications.length) * 100);
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto h-screen overflow-hidden flex flex-col space-y-3" style={{ minHeight: 0 }}>
       {/* 页面标题 */}
       <div className="text-center mb-8">
         <div className="flex items-center justify-center mb-4">
@@ -301,54 +387,47 @@ const QuestioningPage: React.FC = () => {
         </p>
       </div>
 
-      {/* 进度指示器 */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">澄清进度</h2>
-          <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
-            {completedSlots.size} / {clarifications.length} 完成
-          </span>
+      {/* 进度指示器（紧凑/展开） */}
+      <div className="bg-white dark:bg-gray-800 rounded-xl p-3 md:p-4 shadow-sm border border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <h2 className="text-sm md:text-base font-semibold text-gray-900 dark:text-white">澄清进度</h2>
+            <span className="text-xs md:text-sm font-medium text-blue-600 dark:text-blue-400">
+              {completedSlots.size} / {clarifications.length}
+            </span>
+          </div>
+          {/* 展开/收起按钮 */}
+          <button
+            onClick={() => setShowIdeaCard(v => v)}
+            className="hidden"
+          >toggle</button>
         </div>
-        
-        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 mb-4">
+        {/* 紧凑进度条 */}
+        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 md:h-2.5 mt-2">
           <div
-            className="bg-gradient-to-r from-green-500 to-blue-500 h-3 rounded-full transition-all duration-500"
+            className="bg-gradient-to-r from-green-500 to-blue-500 h-full rounded-full transition-all duration-500"
             style={{ width: `${getProgressPercentage()}%` }}
-          ></div>
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {clarifications.map((clarification) => (
-            <div
-              key={clarification.slot_name}
-              className={`
-                flex items-center space-x-2 p-2 rounded-lg
-                ${completedSlots.has(clarification.slot_name)
-                  ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300'
-                  : 'bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
-                }
-              `}
-            >
-              {completedSlots.has(clarification.slot_name) ? (
-                <CheckCircle2 className="w-4 h-4" />
-              ) : (
-                <Clock className="w-4 h-4" />
-              )}
-              <span className="text-sm font-medium truncate">
-                {clarification.slot_name.replace('_', ' ')}
-              </span>
-            </div>
-          ))}
+          />
         </div>
       </div>
 
-      {/* 当前想法摘要 */}
+      {/* 当前想法摘要（默认折叠，可展开） */}
       {currentIdea && (
-        <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6 border border-blue-200 dark:border-blue-800">
-          <div className="flex items-start space-x-3">
-            <Lightbulb className="w-6 h-6 text-blue-600 dark:text-blue-400 mt-1 flex-shrink-0" />
-            <div>
-              <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">当前想法</h3>
+        <div className="rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50/60 dark:bg-blue-900/20">
+          <div className="flex items-center justify-between px-4 py-2">
+            <div className="flex items-center space-x-2 text-blue-800 dark:text-blue-200">
+              <Lightbulb className="w-5 h-5" />
+              <span className="text-sm font-medium">当前想法摘要</span>
+            </div>
+            <button
+              onClick={() => setShowIdeaCard(v => !v)}
+              className="text-xs px-2 py-1 rounded-md bg-blue-100 dark:bg-blue-800 text-blue-700 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-700"
+            >
+              {showIdeaCard ? '收起' : '展开'}
+            </button>
+          </div>
+          {showIdeaCard && (
+            <div className="px-6 pb-4">
               <p className="text-blue-800 dark:text-blue-200 text-sm">{currentIdea.raw_text}</p>
               {currentIdea.context_hints.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-3">
@@ -363,14 +442,14 @@ const QuestioningPage: React.FC = () => {
                 </div>
               )}
             </div>
-          </div>
+          )}
         </div>
       )}
 
-      {/* 对话区域 */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+  {/* 对话区域（占据剩余高度，内部滚动；设置最小高度避免“被压缩”） */}
+  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex flex-col flex-1 min-h-0" style={{ minHeight: '48vh' }}>
         {/* 对话历史 */}
-        <div className="h-96 overflow-y-auto p-6 space-y-4">
+        <div className="flex-1 min-h-0 overflow-y-auto p-6 space-y-4">
           {messages.map((message) => (
             <div
               key={message.id}
@@ -389,7 +468,7 @@ const QuestioningPage: React.FC = () => {
               </div>
               
               <div className={`
-                max-w-xs lg:max-w-md xl:max-w-lg p-3 rounded-lg
+                max-w-[80%] p-3 rounded-lg
                 ${message.type === 'user'
                   ? 'bg-blue-600 text-white'
                   : message.isImportant
@@ -419,36 +498,47 @@ const QuestioningPage: React.FC = () => {
               </div>
             </div>
           )}
-        </div>
+          {/* 滚动锚点：保持列表在底部 */}
+          <div ref={bottomRef} />
+  </div>
 
-        {/* 输入区域 */}
-        <div className="border-t border-gray-200 dark:border-gray-700 p-4">
+  {/* 输入区域与提示 */}
+  <div className="border-t border-gray-200 dark:border-gray-700 p-4" style={{ position: 'relative', zIndex: 20 }}>
           <div className="flex space-x-2">
             <input
               type="text"
               value={currentInput}
               onChange={(e) => setCurrentInput(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="输入您的回答..."
-              disabled={isProcessing}
+              onKeyDown={handleKeyDown}
+              placeholder={isCompleted ? "澄清已完成，正在交给团队..." : "输入您的回答..."}
+              // 允许随时输入，不受 isProcessing 影响
+              disabled={isCompleted}
+              autoFocus
+              style={{ pointerEvents: 'auto', position: 'relative', zIndex: 10 }}
               className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white disabled:opacity-50"
             />
             <button
               onClick={handleSendMessage}
-              disabled={!currentInput.trim() || isProcessing}
+              disabled={!currentInput.trim() || isCompleted}
+              style={{ pointerEvents: 'auto', position: 'relative', zIndex: 20 }}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               <Send className="w-4 h-4" />
             </button>
           </div>
-          
           {/* 快速回答建议 */}
           {messages.length > 0 && 
            messages[messages.length - 1]?.content.includes('建议选项') &&
-           !completedSlots.has(messages.find(m => m.clarificationId)?.clarificationId || '') && (
+           (() => {
+             const lastBotQ = [...messages].reverse().find(m => m.type === 'bot' && m.clarificationId);
+             return lastBotQ && !completedSlots.has(lastBotQ.clarificationId!);
+           })() && (
             <div className="mt-3 flex flex-wrap gap-2">
-              {clarifications
-                .find(c => c.slot_name === messages.find(m => m.clarificationId)?.clarificationId)
+              {(() => {
+                  const lastBotQ = [...messages].reverse().find(m => m.type === 'bot' && m.clarificationId);
+                  return clarifications.find(c => c.slot_name === (lastBotQ?.clarificationId || ''));
+                })()
                 ?.suggested_answers?.map((answer, index) => (
                 <button
                   key={index}
@@ -460,16 +550,18 @@ const QuestioningPage: React.FC = () => {
               ))}
             </div>
           )}
+
+          {/* 轻提示：嵌入输入区域底部，避免占页面高度 */}
+          <div className="mt-2 text-center text-gray-500 dark:text-gray-400 text-xs">
+            <div className="flex items-center justify-center space-x-2">
+              <Target className="w-3 h-3" />
+              <span>详细回答将帮助 AI 更好地优化您的想法</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* 底部提示 */}
-      <div className="text-center text-gray-500 dark:text-gray-400 text-sm">
-        <div className="flex items-center justify-center space-x-2">
-          <Target className="w-4 h-4" />
-          <span>详细的回答将帮助AI更好地优化您的想法</span>
-        </div>
-      </div>
+      {/* 移除底部独立提示，避免占用垂直空间 */}
     </div>
   );
 };

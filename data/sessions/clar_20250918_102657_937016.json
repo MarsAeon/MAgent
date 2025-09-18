@@ -1,0 +1,191 @@
+{
+  "id": "clar_20250918_102657_937016",
+  "status": "completed",
+  "idea_seed": {
+    "raw_text": "我想做一个ai英语学习工具",
+    "context_hints": []
+  },
+  "project_id": "5a747d1c-74a7-4646-9ad9-f5c8b967b0e5",
+  "questions": [
+    {
+      "slot_name": "education_stage",
+      "question": "面向哪个学段/年龄层？",
+      "priority": 10,
+      "type": "domain",
+      "answer": "大学生"
+    },
+    {
+      "slot_name": "target_user",
+      "question": "这个想法的目标用户是谁？",
+      "priority": 9,
+      "type": "target",
+      "answer": "大学生"
+    },
+    {
+      "slot_name": "core_pain",
+      "question": "它要解决的核心痛点是什么？",
+      "priority": 9,
+      "type": "problem",
+      "answer": "词汇"
+    },
+    {
+      "slot_name": "key_features",
+      "question": "预期的核心功能模块有哪些？",
+      "priority": 8,
+      "type": "features",
+      "answer": "背单词"
+    },
+    {
+      "slot_name": "data_sources",
+      "question": "可用的数据来源或先决条件是什么？",
+      "priority": 7,
+      "type": "data",
+      "answer": "教材"
+    },
+    {
+      "slot_name": "success_metrics",
+      "question": "成功的评估标准或关键指标是什么？",
+      "priority": 7,
+      "type": "metrics",
+      "answer": "学习效果"
+    },
+    {
+      "slot_name": "constraints",
+      "question": "预算/时间/合规方面有无约束？",
+      "priority": 6,
+      "type": "constraints",
+      "answer": "一周时间"
+    },
+    {
+      "slot_name": "personalization_basis",
+      "question": "个性化策略基于哪些学习风格理论？",
+      "priority": 7,
+      "type": "method",
+      "answer": "不知道"
+    }
+  ],
+  "created_at": "2025-09-18T10:26:57.937038",
+  "updated_at": "2025-09-18T10:29:39.393481",
+  "messages": [
+    {
+      "role": "bot",
+      "slot_name": "education_stage",
+      "content": "面向哪个学段/年龄层？",
+      "timestamp": "2025-09-18T10:27:43.515126"
+    },
+    {
+      "role": "user",
+      "slot_name": "education_stage",
+      "content": "大学生",
+      "timestamp": "2025-09-18T10:27:54.338766"
+    },
+    {
+      "role": "bot",
+      "slot_name": "target_user",
+      "content": "这个想法的目标用户是谁？",
+      "timestamp": "2025-09-18T10:27:54.341249"
+    },
+    {
+      "role": "user",
+      "slot_name": "target_user",
+      "content": "大学生",
+      "timestamp": "2025-09-18T10:28:02.405346"
+    },
+    {
+      "role": "bot",
+      "slot_name": "core_pain",
+      "content": "它要解决的核心痛点是什么？",
+      "timestamp": "2025-09-18T10:28:02.406602"
+    },
+    {
+      "role": "user",
+      "slot_name": "core_pain",
+      "content": "词汇",
+      "timestamp": "2025-09-18T10:28:11.431485"
+    },
+    {
+      "role": "bot",
+      "slot_name": "key_features",
+      "content": "预期的核心功能模块有哪些？",
+      "timestamp": "2025-09-18T10:28:11.433236"
+    },
+    {
+      "role": "user",
+      "slot_name": "key_features",
+      "content": "背单词",
+      "timestamp": "2025-09-18T10:28:16.002916"
+    },
+    {
+      "role": "bot",
+      "slot_name": "data_sources",
+      "content": "可用的数据来源或先决条件是什么？",
+      "timestamp": "2025-09-18T10:28:16.004966"
+    },
+    {
+      "role": "user",
+      "slot_name": "data_sources",
+      "content": "教材",
+      "timestamp": "2025-09-18T10:28:28.703164"
+    },
+    {
+      "role": "bot",
+      "slot_name": "success_metrics",
+      "content": "成功的评估标准或关键指标是什么？",
+      "timestamp": "2025-09-18T10:28:28.705392"
+    },
+    {
+      "role": "user",
+      "slot_name": "success_metrics",
+      "content": "学习效果",
+      "timestamp": "2025-09-18T10:28:36.558701"
+    },
+    {
+      "role": "bot",
+      "slot_name": "personalization_basis",
+      "content": "个性化策略基于哪些学习风格理论？",
+      "timestamp": "2025-09-18T10:28:36.561178"
+    },
+    {
+      "role": "user",
+      "slot_name": "personalization_basis",
+      "content": "不知道",
+      "timestamp": "2025-09-18T10:28:47.325448"
+    },
+    {
+      "role": "bot",
+      "slot_name": "constraints",
+      "content": "预算/时间/合规方面有无约束？",
+      "timestamp": "2025-09-18T10:28:47.326825"
+    },
+    {
+      "role": "user",
+      "slot_name": "constraints",
+      "content": "一周时间",
+      "timestamp": "2025-09-18T10:28:53.210088"
+    }
+  ],
+  "summary": {
+    "title": "概念总结",
+    "refined_idea": "我想做一个ai英语学习工具",
+    "key_features": [],
+    "user_segments": [],
+    "core_pain_points": [],
+    "constraints": [],
+    "success_metrics": [],
+    "risks": [],
+    "next_steps": [
+      "进入多智能体协作讨论，细化方案与里程碑"
+    ],
+    "qa_pairs": [
+      "面向哪个学段/年龄层？ -> 大学生",
+      "这个想法的目标用户是谁？ -> 大学生",
+      "它要解决的核心痛点是什么？ -> 词汇",
+      "预期的核心功能模块有哪些？ -> 背单词",
+      "可用的数据来源或先决条件是什么？ -> 教材",
+      "成功的评估标准或关键指标是什么？ -> 学习效果",
+      "预算/时间/合规方面有无约束？ -> 一周时间",
+      "个性化策略基于哪些学习风格理论？ -> 不知道"
+    ]
+  },
+  "workflow_session_id": "session_20250918_102939_5a747d1c"
+}

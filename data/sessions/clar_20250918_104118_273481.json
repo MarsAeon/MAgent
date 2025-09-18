@@ -1,0 +1,88 @@
+{
+  "id": "clar_20250918_104118_273481",
+  "status": "running",
+  "idea_seed": {
+    "raw_text": "一个基于AI的智能学习平台，能够根据学生的学习风格和进度自动调整教学内容",
+    "context_hints": [
+      "面向大学生",
+      "在线教育"
+    ],
+    "domain": "教育科技"
+  },
+  "project_id": null,
+  "questions": [
+    {
+      "slot_name": "education_stage",
+      "question": "面向哪个学段/年龄层？",
+      "priority": 10,
+      "type": "domain",
+      "answer": null
+    },
+    {
+      "slot_name": "target_user",
+      "question": "这个想法的目标用户是谁？",
+      "priority": 9,
+      "type": "target",
+      "answer": null
+    },
+    {
+      "slot_name": "core_pain",
+      "question": "它要解决的核心痛点是什么？",
+      "priority": 9,
+      "type": "problem",
+      "answer": null
+    },
+    {
+      "slot_name": "key_features",
+      "question": "预期的核心功能模块有哪些？",
+      "priority": 8,
+      "type": "features",
+      "answer": null
+    },
+    {
+      "slot_name": "data_sources",
+      "question": "可用的数据来源或先决条件是什么？",
+      "priority": 7,
+      "type": "data",
+      "answer": null
+    },
+    {
+      "slot_name": "success_metrics",
+      "question": "成功的评估标准或关键指标是什么？",
+      "priority": 7,
+      "type": "metrics",
+      "answer": null
+    },
+    {
+      "slot_name": "constraints",
+      "question": "预算/时间/合规方面有无约束？",
+      "priority": 6,
+      "type": "constraints",
+      "answer": null
+    },
+    {
+      "slot_name": "personalization_basis",
+      "question": "个性化策略基于哪些学习风格理论？",
+      "priority": 7,
+      "type": "method",
+      "answer": null
+    },
+    {
+      "slot_name": "business_model",
+      "question": "平台的商业模式与收费方式是什么？",
+      "priority": 7,
+      "type": "business",
+      "answer": null
+    }
+  ],
+  "created_at": "2025-09-18T10:41:18.273506",
+  "updated_at": "2025-09-18T10:42:03.956369",
+  "messages": [
+    {
+      "role": "bot",
+      "slot_name": "education_stage",
+      "content": "面向哪个学段/年龄层？",
+      "timestamp": "2025-09-18T10:42:03.956359"
+    }
+  ]
+}

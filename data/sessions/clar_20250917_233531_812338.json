@@ -1,0 +1,72 @@
+{
+  "id": "clar_20250917_233531_812338",
+  "status": "running",
+  "idea_seed": {
+    "raw_text": "用ai辅助学习英语",
+    "context_hints": [
+      "大学生"
+    ]
+  },
+  "project_id": null,
+  "questions": [
+    {
+      "slot_name": "learning_focus",
+      "question": "你希望通过AI辅助学习英语的哪个方面？例如：听力、口语、阅读、写作、词汇或语法。",
+      "priority": 9,
+      "type": "multiple_choice",
+      "answer": "词汇"
+    },
+    {
+      "slot_name": "english_level",
+      "question": "你的当前英语水平是什么？例如：初级、中级、高级。",
+      "priority": 8,
+      "type": "multiple_choice",
+      "answer": "初级"
+    },
+    {
+      "slot_name": "ai_features",
+      "question": "你希望AI以什么形式辅助学习？例如：对话练习、智能纠错、个性化课程推荐、语音识别训练等。",
+      "priority": 9,
+      "type": "multiple_choice",
+      "answer": "对话"
+    },
+    {
+      "slot_name": "daily_time_commitment",
+      "question": "你每天愿意花多少时间用AI学习英语？",
+      "priority": 7,
+      "type": "text",
+      "answer": "3小时"
+    },
+    {
+      "slot_name": "preferred_device",
+      "question": "你更倾向于使用哪种设备进行学习？例如：手机App、网页平台、智能音箱、AR/VR设备。",
+      "priority": 7,
+      "type": "multiple_choice",
+      "answer": "手机"
+    },
+    {
+      "slot_name": "progress_tracking",
+      "question": "是否需要AI提供学习进度跟踪和反馈？",
+      "priority": 6,
+      "type": "boolean",
+      "answer": "需要"
+    },
+    {
+      "slot_name": "learning_goal",
+      "question": "你是否有特定的学习目标？例如：通过雅思/托福考试、日常交流、商务英语等。",
+      "priority": 8,
+      "type": "text",
+      "answer": "四级"
+    },
+    {
+      "slot_name": "native_simulation",
+      "question": "是否希望AI支持母语者语音模拟和实时互动？",
+      "priority": 7,
+      "type": "boolean",
+      "answer": "希望"
+    }
+  ],
+  "created_at": "2025-09-17T23:35:31.812392",
+  "updated_at": "2025-09-17T23:36:20.989223",
+  "messages": []
+}

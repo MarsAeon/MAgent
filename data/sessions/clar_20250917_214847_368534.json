@@ -1,0 +1,74 @@
+{
+  "id": "clar_20250917_214847_368534",
+  "status": "running",
+  "idea_seed": {
+    "raw_text": "我有一个面向中学生的个性化学习平台的想法，根据学习风格推荐内容和练习，未来做成SaaS。",
+    "context_hints": [
+      "education",
+      "platform"
+    ],
+    "domain": "education"
+  },
+  "project_id": null,
+  "questions": [
+    {
+      "slot_name": "target_age_group",
+      "question": "目标中学生年龄段具体是哪个范围？例如初中、高中还是涵盖整个中学阶段？",
+      "priority": 9,
+      "type": "clarification",
+      "answer": null
+    },
+    {
+      "slot_name": "learning_styles",
+      "question": "你定义的‘学习风格’具体包括哪些类型？例如视觉型、听觉型、动觉型等？",
+      "priority": 10,
+      "type": "clarification",
+      "answer": null
+    },
+    {
+      "slot_name": "assessment_method",
+      "question": "平台将如何评估学生的学习风格？通过测试、行为分析，还是教师输入？",
+      "priority": 10,
+      "type": "mechanism",
+      "answer": null
+    },
+    {
+      "slot_name": "content_source",
+      "question": "推荐的内容和练习是基于现有教育资源整合，还是平台自主生成？",
+      "priority": 8,
+      "type": "content_source",
+      "answer": null
+    },
+    {
+      "slot_name": "saas_target_customer",
+      "question": "未来SaaS模式的目标客户是谁？学校、教师、教育机构，还是直接面向学生或家长？",
+      "priority": 9,
+      "type": "business_model",
+      "answer": null
+    },
+    {
+      "slot_name": "recommendation_engine",
+      "question": "是否有技术实现的初步构想？例如是否使用AI算法进行个性化推荐？",
+      "priority": 8,
+      "type": "technical_feasibility",
+      "answer": null
+    },
+    {
+      "slot_name": "subject_coverage",
+      "question": "平台是否会支持多学科内容？如果是，优先覆盖哪些学科？",
+      "priority": 7,
+      "type": "scope",
+      "answer": null
+    },
+    {
+      "slot_name": "curriculum_alignment",
+      "question": "是否有考虑与学校课程标准（如国家新课标）对接？",
+      "priority": 8,
+      "type": "compliance",
+      "answer": null
+    }
+  ],
+  "created_at": "2025-09-17T21:48:47.368632",
+  "updated_at": "2025-09-17T21:49:46.560523",
+  "messages": []
+}
